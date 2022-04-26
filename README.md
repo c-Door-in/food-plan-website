@@ -3,7 +3,7 @@
 
 ### Установить зависимости
 ```
-pip install -r requirements
+pip install -r requirements.txt
 ```
 ### Назначить виртуальные переменные
 Создать в корне файл `.env` и прописать в нем:
