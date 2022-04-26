@@ -14,7 +14,6 @@ from django.urls import reverse_lazy
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
-    form_class = AuthenticationForm
 
     def get_success_url(self):
         return reverse_lazy('profile', args=[self.request.user.id])
