@@ -37,16 +37,19 @@ class Product(models.Model):
 
 class Dish(models.Model):
     title = models.CharField('Название блюда', max_length=200)
-    description = models.TextField('Описание Блюда')
-    cooking_method = models.TextField('Способ приготовления')
+    instruction = models.TextField('Способ приготовления')
     image = models.ImageField(
         "Изображение",
         null=True,
         blank=True,
     )
+    image_url = models.TextField(
+        'Ссылка на картинку',
+        blank=True,
+    )
     ingredients = models.ManyToManyField(
         Product,
-        verbose_name='Ингридиенты',
+        verbose_name='Ингредиенты',
         related_name='dishes',
     )
     preferences = models.ForeignKey(
