@@ -12,7 +12,7 @@ def cardpage(request):
     template_name = 'card3.html'
     context = {
         'title': first_dish.title,
-        'image_url': f'https://www.kuharka.ru{first_dish.image_url}',
+        'image': first_dish.image,
         'instruction': first_dish.instruction,
         'ingredients': first_dish.ingredients.all(),
     }
