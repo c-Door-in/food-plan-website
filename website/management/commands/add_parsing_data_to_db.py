@@ -60,7 +60,6 @@ def main():
         recipes = json.load(source)
     for recipe in recipes:
         add_to_db(recipe)
-        break
 
 
 class Command(BaseCommand):
