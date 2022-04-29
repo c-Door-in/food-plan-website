@@ -64,11 +64,13 @@
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
                                         
-                                            <input type="text" class="form-control" id="name">
+                                            <!--<input type="text" class="form-control" id="name">-->
+                                            {{ form.first_name }}
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                                            <!--<input type="email" class="form-control" id="email" aria-describedby="emailHelp">-->
+                                            {{ form.username }}
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
@@ -76,11 +78,13 @@
                                                 <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
                                         
-                                            <input type="password" class="form-control" id="password">
+                                            <!--<input type="password" class="form-control" id="password">-->
+                                            {{ form.password1 }}
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputPassword1" class="form-label">Подтверждение пароля</label>
-                                            <input type="password" class="form-control" id="PasswordConfirm">
+                                            <!--<input type="password" class="form-control" id="PasswordConfirm">-->
+                                            {{ form.password2 }}
                                         </div>
                                         <div class="d-block">
                                             <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Сохранить
@@ -90,6 +94,9 @@
                                 </div>
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
+                                        {% for subscribe in subscribes %}
+                                            <p>subscribe</p>
+                                        {% endfor %}
                                         <div class="col-2">
                                             <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
                                         </div>

@@ -13,13 +13,18 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 
 from accounts.forms import CustomUserCreationForm, UserProfileForm
+from website.models import Subscribe
 
 
 class UserLoginView(LoginView):
-    template_name = 'login.html'
+    template_name = 'auth.html'
 
     def get_success_url(self):
         return reverse_lazy('profile', args=[self.request.user.id])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subscribes'] = Subscribe.objects.filter(subscriber=self.request.user.id)
 
 
 class UserLogoutView(LogoutView):

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Dish, Product, Subscribe, User, Preference, Allergy, Bill, Category
+from django.contrib.auth.models import User
+
+from .models import Dish, Product, Subscribe, Preference, Allergy, Bill, Category
 from django.db import models
 from django.db.models.functions import Trunc
 from django.db.models import Sum, Min, Max, DateTimeField
@@ -99,15 +101,15 @@ class DishAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 
-@admin.register(User)
-class User(admin.ModelAdmin):
-    inlines = [
-        SubscriptionAdmin
-    ]
-    filter_horizontal = ('favorite_dishes', 'unloved_dishes')
-
-    class Meta:
-        model = User
+# @admin.register(User)
+# class User(admin.ModelAdmin):
+#     inlines = [
+#         SubscriptionAdmin
+#     ]
+#     # filter_horizontal = ('favorite_dishes', 'unloved_dishes')
+#
+#     class Meta:
+#         model = User
 
 
 @admin.register(Subscribe)

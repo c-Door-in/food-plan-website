@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
@@ -98,29 +99,29 @@ class Dish(models.Model):
         verbose_name_plural = 'Блюда'
 
 
-class User(models.Model):
-    first_name = models.CharField('Имя', max_length=250)
-    last_name = models.CharField('Фамилия', max_length=250, blank=True)
-    chat_id = models.IntegerField('Chat id', unique=True)
-    phone = models.CharField('Номер телефона', max_length=20, blank=True)
-    favorite_dishes = models.ManyToManyField(Dish,
-                                             verbose_name='Любимые блюда',
-                                             related_name='favourite',
-                                             blank=True,
-                                             default=None)
-
-    unloved_dishes = models.ManyToManyField(Dish,
-                                            verbose_name='Нелюбимые блюда',
-                                            related_name='unloved',
-                                            blank=True,
-                                            default=None)
-
-    def __str__(self):
-        return f'ID: {self.chat_id} имя: {self.first_name} телефон: {self.phone}'
-
-    class Meta:
-        verbose_name = 'Подписчик'
-        verbose_name_plural = 'Подписчики'
+# class User(models.Model):
+#     first_name = models.CharField('Имя', max_length=250)
+#     last_name = models.CharField('Фамилия', max_length=250, blank=True)
+#     chat_id = models.IntegerField('Chat id', unique=True)
+#     phone = models.CharField('Номер телефона', max_length=20, blank=True)
+#     favorite_dishes = models.ManyToManyField(Dish,
+#                                              verbose_name='Любимые блюда',
+#                                              related_name='favourite',
+#                                              blank=True,
+#                                              default=None)
+#
+#     unloved_dishes = models.ManyToManyField(Dish,
+#                                             verbose_name='Нелюбимые блюда',
+#                                             related_name='unloved',
+#                                             blank=True,
+#                                             default=None)
+#
+#     def __str__(self):
+#         return f'ID: {self.chat_id} имя: {self.first_name} телефон: {self.phone}'
+#
+#     class Meta:
+#         verbose_name = 'Подписчик'
+#         verbose_name_plural = 'Подписчики'
 
 
 class Subscribe(models.Model):
