@@ -60,7 +60,7 @@ def add_to_db(recipe):
         }
     )
 
-    # upload_image(image_url, title)
+    upload_image(image_url, title)
 
     for ingredient in ingredients:
         # formatted_product = ingredient.split(' – ')[0] if ' - ' in ingredient else ingredient
@@ -74,7 +74,7 @@ def add_to_db(recipe):
 def main():
     add_allergy_types()
     # Path('media/img').mkdir(parents=True, exist_ok=True)
-    with open(f'media/recipes.json', 'r', encoding='utf-8') as source:
+    with open(f'recipes.json', 'r', encoding='utf-8') as source:
         recipes = json.load(source)
     for recipe in recipes:
         add_to_db(recipe)
