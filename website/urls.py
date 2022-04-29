@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import mainpage, cardpage
+
+from website.views import mainpage, CardView
 
 
 urlpatterns = [
     path('', mainpage),
-    path('card/', cardpage)
+    path('card/<int:pk>', CardView.as_view(), name='card-detail')
 ]
 

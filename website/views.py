@@ -1,20 +1,19 @@
 from django.shortcuts import render
+from django.views.generic.detail import DetailView
 
-from .models import Dish, Product, Subscribe, User, Preference, Allergy, Bill
+from website.models import Dish, Product, Subscribe, User, Preference, Allergy, Bill
 
 
 def mainpage(request):
     return render(request, 'index.html')
 
 
-def cardpage(request):
-    first_dish = Dish.objects.all()[0]
+class CardView(DetailView):
+
+    model = Dish
     template_name = 'card3.html'
-    context = {
-        'title': first_dish.title,
-        'image': first_dish.image,
-        'instruction': first_dish.instruction,
-        'ingredients': first_dish.ingredients.all(),
-    }
-    return render(request, template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
