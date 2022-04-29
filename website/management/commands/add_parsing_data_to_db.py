@@ -7,7 +7,7 @@ import requests
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from website.models import Dish, Product, Allergy, Preference
+from website.models import Dish, Product, Allergy, Category
 
 
 def upload_image(image_url, title):
@@ -26,16 +26,29 @@ def upload_image(image_url, title):
     )
 
 
+def add_allergy_types():
+    allergy_types = [
+        'Рыба и морепродукты',
+        'Мясо',
+        'Зерновые',
+        'Продукты пчеловодства',
+        'Орехи и бобовые',
+        'Молочные продукты',
+    ]
+
+    for type in allergy_types:
+        Allergy.objects.get_or_create(
+            title=type
+        )
+
+
 def add_to_db(recipe):
     title = recipe['title']
     instruction = recipe['instruction']
     image_url = recipe['image_url']
     ingredients = recipe['ingredients']
+    category, _ = Category.objects.get_or_create(title=recipe['category'])
     comments = recipe['comments']
-
-    # image_response = requests.get(image_url)
-    # image_response.raise_for_status()
-    # image_content = ContentFile(image_response.content)
 
     dish, created = Dish.objects.get_or_create(
         title=title,
@@ -43,10 +56,11 @@ def add_to_db(recipe):
             'instruction': instruction,
             'image_url': image_url,
             'preferences': None,
+            'category': category,
         }
     )
 
-    upload_image(image_url, title)
+    # upload_image(image_url, title)
 
     for ingredient in ingredients:
         # formatted_product = ingredient.split(' – ')[0] if ' - ' in ingredient else ingredient
@@ -58,12 +72,12 @@ def add_to_db(recipe):
 
 
 def main():
+    add_allergy_types()
     # Path('media/img').mkdir(parents=True, exist_ok=True)
-    with open(f'media/recipes_fixed.json', 'r', encoding='utf-8') as source:
+    with open(f'media/recipes.json', 'r', encoding='utf-8') as source:
         recipes = json.load(source)
     for recipe in recipes:
         add_to_db(recipe)
-        break
 
 
 class Command(BaseCommand):

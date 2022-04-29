@@ -35,6 +35,24 @@ class Product(models.Model):
         verbose_name_plural = 'Ингридиенты'
 
 
+class Category(models.Model):
+    title = models.CharField('Название категории', max_length=200)
+    allergy = models.ForeignKey(
+        Allergy,
+        verbose_name='Не подходит для',
+        related_name='inappropriate_categories',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+
 class Dish(models.Model):
     title = models.CharField('Название блюда', max_length=200)
     instruction = models.TextField('Способ приготовления')
@@ -59,10 +77,12 @@ class Dish(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    allergy = models.ManyToManyField(
-        Allergy,
-        verbose_name='Не подходит для:',
-        related_name='inappropriate_dishes',
+    category = models.ForeignKey(
+        Category,
+        verbose_name='Категория блюда',
+        related_name='dishes',
+        on_delete=models.SET_NULL,
+        null=True,
     )
     calories = models.PositiveSmallIntegerField(
         'Калорийность',

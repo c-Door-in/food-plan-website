@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import Dish, Product, Subscribe, User, Preference, Allergy, Bill
+from .models import Dish, Product, Subscribe, User, Preference, Allergy, Bill, Category
 from django.db import models
 from django.db.models.functions import Trunc
 from django.db.models import Sum, Min, Max, DateTimeField
 
 admin.site.register(Preference)
 admin.site.register(Allergy)
+admin.site.register(Category)
 
 
 @admin.register(Product)
@@ -93,8 +94,8 @@ class SubscriptionAdmin(admin.StackedInline):
 
 @admin.register(Dish)
 class DishAdmin(admin.ModelAdmin):
-    raw_id_fields = ('preferences', 'allergy')
-    list_filter = ('preferences', 'allergy')
+    raw_id_fields = ('preferences', 'category')
+    list_filter = ('preferences', 'category')
     search_fields = ('title',)
 
 
