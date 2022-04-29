@@ -9,6 +9,7 @@ pip install -r requirements.txt
 Создать в корне файл `.env` и прописать в нем:
 ```
 DEBUG=True
+STRIPE_PUBLISHABLE_KEY = sk_test_4eC39HqLyjWDarjtT1zdp7dc
 ```
 
 ### Создать суперпользователя для админки

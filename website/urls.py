@@ -4,7 +4,7 @@ from website.views import mainpage, CardView
 
 
 urlpatterns = [
-    path('', mainpage),
+    path('', mainpage, name='mainpage'),
     path('card/<int:pk>', CardView.as_view(), name='card-detail')
 ]
 
