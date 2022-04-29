@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 import requests
@@ -11,14 +12,15 @@ from website.models import Dish, Product, Allergy, Preference
 
 def upload_image(image_url, title):
     dish = Dish.objects.get(title=title)
-    name = os.path.basename(unquote(urlsplit(image_url).path))
+    filename = os.path.basename(unquote(urlsplit(image_url).path))
+    filepath = os.path.join('img', filename)
 
     image_response = requests.get(image_url)
     image_response.raise_for_status()
     image_content = ContentFile(image_response.content)
 
     dish.image.save(
-        name,
+        filepath,
         image_content,
         save=True
     )
@@ -56,10 +58,12 @@ def add_to_db(recipe):
 
 
 def main():
+    # Path('media/img').mkdir(parents=True, exist_ok=True)
     with open(f'media/recipes_fixed.json', 'r', encoding='utf-8') as source:
         recipes = json.load(source)
     for recipe in recipes:
         add_to_db(recipe)
+        break
 
 
 class Command(BaseCommand):
