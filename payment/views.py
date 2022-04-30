@@ -1,7 +1,10 @@
 import stripe
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic import TemplateView
 from django.conf import settings
+from website.models import Subscribe
+from django.contrib.auth.models import User
 
 
 def make_payment(request):
@@ -22,17 +25,23 @@ def make_payment(request):
             'quantity': 1,
         }],
         mode='payment',
-        success_url=request.build_absolute_uri('success/'),
-        cancel_url=request.build_absolute_uri('cancelled/'),
+        success_url=request.build_absolute_uri(reverse('successed_payment')),
+        cancel_url=request.build_absolute_uri(reverse('cancelled_payment')),
     )
 
     return redirect(session.url, code=303)
 
 
 def pay_success(request):
-    # order = Order.objects.get(id=order_id)
-    # order.status = 'ORDER'
-    # order.save()
+    user_id = request.user.id
+    subs_parameters = request.session[str(user_id)]
+#   TODO загрузить соотв. объкты для создания подписки
+    subscriber = User.objects.get(pk=user_id)
+    # subscription = Subscribe.objects.create(
+    #     subscriber=subscriber,
+    #     и далее по полям
+    #     )
+
     return render(request, "success.html")
 
 
@@ -42,3 +51,22 @@ class CancelledView(TemplateView):
 
 class OrderView(TemplateView):
     template_name = 'order.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        user_id = request.user.id
+        request.session[str(user_id)] = {
+            'subscriber_id': 1,
+            'preference_id': 2,
+            'allergy_id': 2,
+            'number_of_meals': 3,
+            'persons_quantity': 1,
+            'shown_dishes_id': 1,
+            'sub_type': 12,             
+            }
+        return super(OrderView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.request.user.id
+        # TODO можно формирование словаря для подписки засунуть сюда
+        return context
