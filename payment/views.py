@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.conf import settings
-from website.models import Subscribe
+from website.models import Subscribe, Allergy
 from django.contrib.auth.models import User
 
 
@@ -35,13 +35,18 @@ def make_payment(request):
 
 def pay_success(request):
     user_id = request.user.id
-    subs_parameters = request.session[str(user_id)]
-#   TODO загрузить соотв. объкты для создания подписки
-    subscriber = User.objects.get(pk=user_id)
-    # subscription = Subscribe.objects.create(
-    #     subscriber=subscriber,
-    #     и далее по полям
-    #     )
+    order = request.session[f'sub_{str(user_id)}']
+    subscribe = Subscribe.objects.create(
+        subscriber=User.objects.get(pk=user_id),
+        number_of_meals=order['number_of_meals'],
+        persons_quantity=order['persons_quantity'],
+        sub_type=order['sub_type'],
+    )
+    if order['allergies']:
+        for allergy in order['allergies']:
+            subscribe.allergy.add(Allergy.objects.get(title=allergy))
+
+    del request.session[f'sub_{str(user_id)}']
 
     return render(request, "success.html")
 
@@ -56,11 +61,11 @@ def get_allergies(order_details):
 
 def order(request):   
     order_details = request.POST
-
+    user_id = request.user.id
     if order_details:
-        subscribe = {
-            'subscriber': request.user.id,
-            'allergy': get_allergies(order_details),
+        request.session[f'sub_{str(user_id)}'] = {
+            'subscriber': user_id,
+            'allergies': get_allergies(order_details),
             'number_of_meals': sum([int(order_details['first_meal']),
                                    int(order_details['second_meal']),
                                    int(order_details['third_meal']),
