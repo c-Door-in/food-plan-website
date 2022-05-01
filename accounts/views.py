@@ -8,6 +8,7 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
     UserCreationForm
 )
+from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
@@ -45,8 +46,24 @@ class UserSignupView(CreateView):
 #     context_object_name = 'profile'
 
 
+# def userProfile(request):
+#     user_id = request.user.id
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['subscribes'] = Subscribe.objects.filter(subscriber=self.request.user.id)
+
+#     return render(request, "success.html")
+
+
 class UserProfileView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'lk.html'
     # context_object_name = 'profile_form'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subscribes'] = Subscribe.objects.filter(subscriber=self.request.user.id)
+        # for subs in context['subscribes']:
+        #     allergies = [allergy.title for allergy in subs.allergy.all()]
+        #     context['subscribes']['allergies'] = ', '.join(allergies)
+        return context

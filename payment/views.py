@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import stripe
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -36,11 +38,13 @@ def make_payment(request):
 def pay_success(request):
     user_id = request.user.id
     order = request.session[f'sub_{str(user_id)}']
+    sub_type = order['sub_type']
     subscribe = Subscribe.objects.create(
+        title=f'Подписка "Имя юзера" на {sub_type} месяцев от {datetime.now().date()}',
         subscriber=User.objects.get(pk=user_id),
         number_of_meals=order['number_of_meals'],
         persons_quantity=order['persons_quantity'],
-        sub_type=order['sub_type'],
+        sub_type=sub_type,
     )
     if order['allergies']:
         for allergy in order['allergies']:
@@ -59,7 +63,7 @@ def get_allergies(order_details):
     return allergies
 
 
-def order(request):   
+def order(request):
     order_details = request.POST
     user_id = request.user.id
     if order_details:

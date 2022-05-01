@@ -95,44 +95,47 @@
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
                                         {% for subscribe in subscribes %}
-                                            <p>subscribe</p>
-                                        {% endfor %}
-                                        <div class="col-2">
-                                            <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
-                                        </div>
-                                        <div class="col-10 col-md-10">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <h2>Название подписки</h2>
-                                                </div>
-                                                <div class="col-md-12 col-lg-9">
-                                                    <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
-                                                        consectetur rem! Eligendi assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae
-                                                        distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis
-                                                        necessitatibus consectetur rem! Eligendi
-                                                        assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae distinctio cum laboriosam
-                                                        sed.</h6>
-                                                </div>
-                                                <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Персоны: </small><small>3</small>
+                                            <div class="col-2">
+                                                <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
+                                            </div>
+                                            <div class="col-10 col-md-10">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h2>{{ subscribe.title }}</h2>
                                                     </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>нет</small>
+                                                    <div class="col-md-12 col-lg-9">
+                                                        <h6>Описание подписки</h6>
                                                     </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Калории: </small><small>1400</small>
+                                                    <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Персоны: </small><small>{{ subscribe.persons_quantity }}</small>
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Аллергии: </small>
+                                                            <small>
+                                                                {% if subscribe.allergy.all %}
+                                                                    {% for allergy in subscribe.allergy.all %}
+                                                                        {{allergy.title}}, 
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    нет
+                                                                {% endif %}
+                                                            </small>
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Калории: </small><small>1000</small>
+                                                        </div>
+                                                        <div class="d-flex flex-row justify-content-between">
+                                                            <small>Кол-во приёмов пищи: </small><small>{{ subscribe.number_of_meals }}</small>
+                                                        </div>
+                                                        
                                                     </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Кол-во приёмов пищи: </small><small>4</small>
+                                                    <div class="d-flex justify-content-center my-5">
+                                                        <a class="btn btn-outline-success" href="{% url 'order_view' %}" role="button">Посмотреть заказ</a>
                                                     </div>
-                                                    
-                                                </div>
-                                                <div class="d-flex justify-content-center my-5">
-                                                    <a class="btn btn-outline-success" href="{% url 'order_view' %}" role="button">Посмотреть заказ</a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
