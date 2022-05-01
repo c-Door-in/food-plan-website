@@ -146,12 +146,12 @@ class Subscribe(models.Model):
         verbose_name='Предпочтения',
         related_name='subscribes',
         on_delete=models.CASCADE,
+        null=True,
     )
     allergy = models.ManyToManyField(
         Allergy,
         verbose_name='Аллергии',
         related_name='subscribes',
-        blank=True
     )
     number_of_meals = models.PositiveSmallIntegerField(
         'Количество приемов пищи в день',
@@ -166,7 +166,6 @@ class Subscribe(models.Model):
         Dish,
         verbose_name='Показанные блюда',
         related_name='used_subscribes',
-        blank=True
     )
     sub_type = models.CharField(
         'Тип подписки',
@@ -190,7 +189,7 @@ class Subscribe(models.Model):
         allergens = [allergy for allergy in self.allergy.all()]
         preference = self.preference
         dishes = Dish.objects.filter(preferences=preference) \
-                             .exclude(allergy__in=allergens)
+                             .exclude(category__allergy__in=allergens)
         self.dishes = dishes
 
         return self.dishes

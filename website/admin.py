@@ -114,9 +114,9 @@ class DishAdmin(admin.ModelAdmin):
 
 @admin.register(Subscribe)
 class Subscribe(admin.ModelAdmin):
-    list_filter = ('subscriber',)
-    raw_id_fields = ('subscriber', 'preference', 'allergy')
-    readonly_fields = ('allowed_dishes', 'shown_dishes')
+    list_filter = ('subscriber', 'allergy', 'preference')
+    raw_id_fields = ('subscriber', 'shown_dishes')
+    readonly_fields = ('shown_dishes', 'subscription_start')
     filter_horizontal = ('allergy',)
     fieldsets = (
         ('Общее', {
@@ -124,7 +124,6 @@ class Subscribe(admin.ModelAdmin):
                 'subscriber',
                 'preference',
                 'allergy',
-                'allowed_dishes',
                 'subscription_start',
                 ('sub_type', 'number_of_meals'),
                 'shown_dishes',
@@ -132,11 +131,6 @@ class Subscribe(admin.ModelAdmin):
             'classes': ('extrapretty'),
         }),
     )
-
-    def allowed_dishes(self, obj):
-        return ', \n'.join([dish.title for dish in obj.select_available_dishes()])
-
-    allowed_dishes.short_description = 'Блюда, соответствующие условиям подписки'
 
     class Meta:
         model = Subscribe

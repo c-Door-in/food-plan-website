@@ -3,9 +3,6 @@
 .vscode
 .gitignore
 
-# Migrations
-migrations/
-
 # Media
 media/
 
