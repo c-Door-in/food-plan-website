@@ -1,52 +1,40 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.forms import (
-    AuthenticationForm,
-    PasswordChangeForm,
-    PasswordResetForm,
-    SetPasswordForm,
-    UserCreationForm
-)
-from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 
-from accounts.forms import CustomUserCreationForm, UserProfileForm
+from accounts.forms import CustomUserCreationForm, ProfileForm, CustomAuthenticationForm
 from website.models import Subscribe
 
 
-class UserLoginView(LoginView):
+class CustomLoginView(LoginView):
     template_name = 'auth.html'
+    form_class = CustomAuthenticationForm
 
     def get_success_url(self):
         return reverse_lazy('profile', args=[self.request.user.id])
 
+
+class CustomLogoutView(LogoutView):
+    next_page = 'login'
+
+
+class SignupView(CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration.html'
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = ProfileForm
+    template_name = 'lk.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['subscribes'] = Subscribe.objects.filter(subscriber=self.request.user.id)
+        return context
 
-
-class UserLogoutView(LogoutView):
-    template_name = 'logout.html'
-
-
-class UserSignupView(CreateView):
-    # form_class = UserCreationForm
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'signup.html'
-
-
-# class UserProfileView(DetailView):
-#     model = User
-#     # template_name = 'profile.html'
-#     template_name = 'lk.html'
-#     context_object_name = 'profile'
-
-
-class UserProfileView(LoginRequiredMixin, UpdateView):
-    model = User
-    form_class = UserProfileForm
-    template_name = 'lk.html'
-    # context_object_name = 'profile_form'
+    def get_success_url(self):
+        return reverse_lazy('profile', args=[self.request.user.id])
