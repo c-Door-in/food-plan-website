@@ -204,13 +204,14 @@ class Subscribe(models.Model):
         for day in range(int(self.sub_type) * 30):
             current_date = self.subscription_start + timedelta(day)
             if current_date.date() == now.date():
-                for hour_range in time_ranges[self.persons_quantity]:
+                for hour_range in time_ranges[self.number_of_meals]:
                     if dish_index+1 > len(available_dishes):
                         dish_index = 0
                     if now.hour in range(*hour_range):
                         return available_dishes[dish_index].id
                     dish_index += 1
                 return 'wrongtime'
+            dish_index += self.number_of_meals
         return None
 
     class Meta:
