@@ -68,11 +68,8 @@ class ProfileForm(forms.ModelForm):
         password2 = self.cleaned_data.get("new_password2")
         if password1 and password2:
             if password1 != password2:
-                raise ValidationError(
-                    self.error_messages["password_mismatch"],
-                    code="password_mismatch",
-                )
-        password_validation.validate_password(password2, self.instance)
+                raise ValidationError('Введенные пароли не совпадают.')
+            password_validation.validate_password(password2, self.instance)
         return password2
 
     def save(self, commit=True):

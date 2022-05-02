@@ -29,6 +29,25 @@
                 </a>
                 <h2 class="text-center"><strong>Авторизация</strong></h2>
             </div>
+
+            {% if form.errors and form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.errors and not form.non_field_errors %}
+                <div class="alert alert-danger">
+                   {% for field in form %}
+                       {% for error in field.errors %}
+                           <div>{{ error|escape }}</div>
+                       {% endfor %}
+                   {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
                 <form method="post">
                     {% csrf_token %}
