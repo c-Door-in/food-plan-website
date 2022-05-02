@@ -72,7 +72,7 @@ class ProfileForm(forms.ModelForm):
                     self.error_messages["password_mismatch"],
                     code="password_mismatch",
                 )
-        password_validation.validate_password(password2, self.instance)
+            password_validation.validate_password(password2, self.instance)
         return password2
 
     def save(self, commit=True):
