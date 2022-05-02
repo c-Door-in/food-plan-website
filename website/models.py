@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta, time
+
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import DateTimeRangeField
 from django.db import models
 from django.utils.timezone import now
 
@@ -146,12 +149,14 @@ class Subscribe(models.Model):
         verbose_name='Предпочтения',
         related_name='subscribes',
         on_delete=models.CASCADE,
+        blank=True,
         null=True,
     )
     allergy = models.ManyToManyField(
         Allergy,
         verbose_name='Аллергии',
         related_name='subscribes',
+        blank=True,
     )
     number_of_meals = models.PositiveSmallIntegerField(
         'Количество приемов пищи в день',
@@ -161,12 +166,6 @@ class Subscribe(models.Model):
         'Количество человек, на которых должна быть рассчитана порция',
         default=1
     )
-
-    shown_dishes = models.ManyToManyField(
-        Dish,
-        verbose_name='Показанные блюда',
-        related_name='used_subscribes',
-    )
     sub_type = models.CharField(
         'Тип подписки',
         choices=SubscribeLengthChoices,
@@ -174,25 +173,45 @@ class Subscribe(models.Model):
         default=12,  # TODO в случае ошибки скрипта, пользователь автоматически получает максимальную подписку!!!
         max_length=25,
     )
-    subscription_start = models.DateField(
+    subscription_start = models.DateTimeField(
         # TODO do not allow blank!
         'Подписка была приобретена',
         default=now,
-        blank=True,
-        null=True,
     )
 
     def __str__(self):
         return f'Подписка {self.pk} - {self.title} - {self.subscriber.first_name}'
 
     def select_available_dishes(self):
-        allergens = [allergy for allergy in self.allergy.all()]
+        allergens = [allergy for allergy in Allergy.objects.all()]
         preference = self.preference
-        dishes = Dish.objects.filter(preferences=preference) \
+        available_dishes = Dish.objects.filter(preferences=preference) \
                              .exclude(category__allergy__in=allergens)
-        self.dishes = dishes
+        self.available_dishes = available_dishes
 
-        return self.dishes
+        return self.available_dishes
+
+    def get_planned_dish_id(self):
+        available_dishes = self.select_available_dishes()
+        dish_index = 0
+        time_ranges = {
+            1: [(5, 23)],
+            2: [(5, 14), (15, 23)],
+            3: [(5, 11), (12, 17), (18, 23)],
+            4: [(5, 9), (10, 14), (15, 19), (20, 23)],
+        }
+        now = datetime.now()
+        for day in range(int(self.sub_type) * 30):
+            current_date = self.subscription_start + timedelta(day)
+            if current_date.date() == now.date():
+                for hour_range in time_ranges[self.persons_quantity]:
+                    if dish_index+1 > len(available_dishes):
+                        dish_index = 0
+                    if now.hour in range(*hour_range):
+                        return available_dishes[dish_index].id
+                    dish_index += 1
+                return 'wrongtime'
+        return None
 
     class Meta:
         verbose_name = 'Подписка'

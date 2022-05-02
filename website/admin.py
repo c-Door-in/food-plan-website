@@ -115,8 +115,8 @@ class DishAdmin(admin.ModelAdmin):
 @admin.register(Subscribe)
 class Subscribe(admin.ModelAdmin):
     list_filter = ('subscriber', 'allergy', 'preference')
-    raw_id_fields = ('subscriber', 'shown_dishes')
-    readonly_fields = ('shown_dishes', 'subscription_start')
+    raw_id_fields = ('subscriber',)
+    readonly_fields = ('subscription_start',)
     filter_horizontal = ('allergy',)
     fieldsets = (
         ('Общее', {
@@ -126,7 +126,6 @@ class Subscribe(admin.ModelAdmin):
                 'allergy',
                 'subscription_start',
                 ('sub_type', 'number_of_meals', 'persons_quantity'),
-                'shown_dishes',
             ),
             'classes': ('extrapretty'),
         }),

@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta, time
 from random import choice
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.urls import reverse
+from django.utils.timezone import make_aware
 
 from website.models import Dish, Subscribe
 
@@ -39,14 +41,22 @@ def order(request):
         return HttpResponseRedirect(reverse('make_payment'))
 
     return render(request, 'order.html')
-
+    
 
 def subscribe(request, pk):
     subscribe = Subscribe.objects.get(pk=pk)
-    dishes = subscribe.select_available_dishes()
-    dish_id = choice(dishes).id
-
+    dish_id = subscribe.get_planned_dish_id()
+    if not dish_id:
+        subscribe.delete()
+        # TODO вывести сообщение об истечении срока давности подписки
+        return render(request, 'order.html')
+    elif dish_id == 'wrongtime':
+        return HttpResponseRedirect(reverse('wrongtime'))
     return HttpResponseRedirect(reverse('card', args=[dish_id]))
+
+
+def wrongtime(request):
+    return render(request, 'wrongtime.html')
 
 
 class CardView(DetailView):
