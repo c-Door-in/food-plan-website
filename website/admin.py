@@ -125,7 +125,7 @@ class Subscribe(admin.ModelAdmin):
                 'preference',
                 'allergy',
                 'subscription_start',
-                ('sub_type', 'number_of_meals'),
+                ('sub_type', 'number_of_meals', 'persons_quantity'),
                 'shown_dishes',
             ),
             'classes': ('extrapretty'),

@@ -1,9 +1,11 @@
+from random import choice
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.urls import reverse
 
-from website.models import Dish
+from website.models import Dish, Subscribe
 
 
 def mainpage(request):
@@ -39,8 +41,15 @@ def order(request):
     return render(request, 'order.html')
 
 
-class CardView(DetailView):
+def subscribe(request, pk):
+    subscribe = Subscribe.objects.get(pk=pk)
+    dishes = subscribe.select_available_dishes()
+    dish_id = choice(dishes).id
 
+    return HttpResponseRedirect(reverse('card', args=[dish_id]))
+
+
+class CardView(DetailView):
     model = Dish
     template_name = 'card3.html'
 
