@@ -26,4 +26,4 @@ python manage.py runserver
 использую данные суперпользователя.
 
 ## Цель проекта
-Учебный проект [Devman](https://dvmn.org/)
+Создан для портала [Devman](https://dvmn.org/)
